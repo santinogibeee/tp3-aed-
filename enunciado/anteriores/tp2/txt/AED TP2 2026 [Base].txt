@@ -1,0 +1,212 @@
+Algoritmos y Estructuras de Datos
+Trabajo Práctico 2 – Enunciado Base 2026
+Implementación de un Sistema Simple de Gestión de Tratamientos Médicos v2.0
+● Aclaración inicial
+La comprensión de este texto en su totalidad es parte de lo que se evalúa, esto implica que
+no respetar los formatos esperados para las entradas y salidas o los resultados esperados será
+penalizado con baja de puntos o incluso aplazo. En función de esto, se les recomienda
+encarecidamente leer TODO el archivo antes de sentarse a desarrollar una solución. En caso
+de que esta primera lectura no sea esclarecedora, se recomienda volver a leer hasta tanto
+cada uno de los elementos del texto sean comprendidos y tenidos en cuenta en su totalidad.
+● Introducción:
+Se pedirá desarrollar una segunda versión (la versión 2.0) del mismo sistema simple que se
+planteó para el TP1 (gestión de tratamientos médicos en un centro de salud) en base al mismo
+esquema de identificación de las enfermedades, problemas de salud y causas de muerte del
+modelo ICD10 (International Classification of Diseases, versión 10) ya usado en el TP1 (vea el
+enunciado del TP1 para recordar los detalles, que deberá volver a tener en cuenta en este
+nuevo trabajo).
+Pero en esta segunda versión 2.0, deberán procesar varios tratamientos (no uno solo), y los
+datos de estos tratamientos vendrán en un archivo de texto, cuyo contenido y estructura se
+describen en la sección siguiente.
+● Entradas:
+Por cada tratamiento a realizar se tienen los mismos datos que se tenían para el TP1:
+● Nombre del paciente: una cadena de caracteres (sin validación ni formato específico
+requerido) con el nombre y el apellido del paciente al cual se aplicó el tratamiento.
+● El código ICD10 que identifica la enfermedad (o sea, el diagnóstico): una cadena de
+caracteres en el formato indicado en el TP1.
+● El monto base a pagar por el tratamiento: Un número entero que indica la cantidad
+mínima que deberá pagarse al centro de salud por el tratamiento (que podrá ser
+diferente para cada tratamiento), y se usará como base para el cálculo del monto final
+usando las mismas reglas que en el TP1 (pero con algunas modificaciones).
+Pero como ya se indicó, para la versión 2.0 el programa deberá procesar los datos de muchos
+tratamientos (y no solo de uno, como en la versión 1.0). Los datos de todos esos tratamientos
+no serán cargados por teclado, sino que vendrán almacenados en un archivo de texto llamado
+tratamientos.txt que será provisto para su procesamiento.
+El programa será ejecutado mediante un programa de control (o runner), y ese runner espera
+que los datos se carguen desde el archivo de texto exclusivamente. Por lo tanto, insistimos
+fuertemente en eso: el programa que tienen que realizar no debe tomar datos desde el
+teclado por ninguna razón, ni debe tener un menú de opciones (eso implicaría cargar por
+teclado la opción elegida). Tampoco debe haber en ninguna parte nada que solicite al usuario
+presionar una tecla para continuar. Todos los datos que el programa debe procesar (y solo
+1
+
+esos datos) estarán en el archivo de texto tratamientos.txt cuyo formato y contenido se
+describe más abajo.
+Es MUY IMPORTANTE que ese archivo se llame tratamientos.txt y que esté almacenado en la
+misma carpeta del proyecto que contiene al programa fuente que desarrollen. Si están
+haciendo pruebas con otros archivos, no hay problemas, pero ASEGÚRENSE de que cuando
+entreguen el programa para su calificación, la función open() esté abriendo exclusivamente
+un archivo llamado tratamientos.txt Y NO OTRO.
+El archivo de texto con los datos de entrada iniciará con una línea (que llamaremos “línea de
+definición de adicionales”) que indica cuál es el monto que se debe sumar a los tratamientos
+cuya letra está entre “A” y “L”, cuál a aquellos cuya letra está entre “M” y “Z” (sin la “U”) y
+cuál a aquellos cuya letra es “U”.
+El formato de esta línea especial es el siguiente:
+− Caracter 0: Es siempre un numeral (#)
+− Caracter 1: Es siempre un espacio
+− Caracteres del 2 al 7 (6 caracteres) el monto para A-L
+− Caracteres del 8 al 13 (6 caracteres) el monto para M-Z (sin U)
+− Caracteres del 14 al 19 (6 caracteres) el monto para la letra U.
+Los tres montos mencionados corresponden a valores enteros, completados con espacios en
+blanco a la derecha en caso de que el monto no tenga 6 dígitos.
+Pero atención… cada vez que aparezca una línea que inicie con “#”, la misma respetará este
+formato y significa que, a partir de esa línea los montos cambian para los próximos
+tratamientos que se lean. A partir de la aparición de una de estas líneas, los tratamientos que
+se procesen deberán respetar el monto a sumar que se indica en la línea mencionada.
+El resto de las líneas del archivo de entrada contendrán los datos de un tratamiento, todos
+juntos conformando una cadena de 39 o 40 caracteres de largo (distribuidos como se explica
+más abajo), siempre con el mismo formato. Cada línea se separa de la que sigue con un salto
+de línea.
+En cada línea que represente a un tratamiento aparecerán, estrictamente en este orden, los
+siguientes datos:
+➔ Caracteres del 0 al 24 (o sea, 25 caracteres): El nombre del paciente. Una cadena de
+caracteres indicando el nombre de quien recibirá el tratamiento. El nombre puede
+consistir de menos de 25 letras, y en ese caso, para completar los 25 caracteres de
+largo, tendrá espacios en blanco a la derecha (que deberán ser removidos una vez que
+se lea esa línea y se separen los datos que contiene).
+➔ Caracteres del 25 al 30 (o sea, 6 caracteres): El código ICD10 del diagnóstico. Es la
+cadena con el identificador del diagnóstico, tal como se describe en la introducción
+del TP1 (insistimos: vuelva a leer ese enunciado, o no podrá continuar con este
+trabajo). Como un código ICD10 puede tener 5 o 6 caracteres, si el código no llegase a
+tener 6, el que falte se completará con un blanco a la derecha, y ese blanco deberá ser
+removido luego de leer la cadena.
+➔ Caracteres del 31 al 38 (o sea, 8 caracteres): El monto base o mínimo a pagar por ese
+tratamiento. Es una cadena compuesta solo por números enteros. Si el número
+2
+
+representado no llegase a tener 8 dígitos, tendrá espacios en blanco a la derecha hasta
+completar los 8 caracteres. Obviamente, al leer esta cadena los blancos deben
+eliminarse, y la cadena debe ser convertida a un valor de tipo int.
+➔ Caracter 39 (opcional): Algunas líneas contienen un caracter “X” al final que indica si
+el tratamiento es de alta complejidad. En caso de que un tratamiento sea identificado
+como de alta complejidad, se aplicará un recargo del 5% sobre el monto final en
+concepto de seguro de vida. Aclaración: aquellos tratamientos que no sean de alta
+complejidad no tendrán un caracter 39, quedando entonces la línea conformada por
+los caracteres del 0 al 38.
+Ejemplo: En el siguiente modelo mostramos qué forma podría tener un pequeño archivo de
+texto como el indicado:
+Luego siguen otras 4 líneas (una por cada tratamiento registrado):
+1. La primera de esas cuatro es de un tratamiento con ICD10 igual a B04.1 (note en esta
+línea (y en todas las que siguen) los espacios en blanco al final del nombre del paciente
+y antes del código ICD10, para completar los 25 caracteres asignados al nombre; y
+note también que después del ICD10 de esta línea, hay un blanco (antes del monto a
+pagar) para que el código complete los 6 caracteres. El monto a pagar tiene 8 dígitos
+por lo que no se completó con un blanco al final.
+2. La segunda tiene ICD10 igual a C03.10. Hay blancos para completar el nombre del
+beneficiario, pero luego del ICD10 no hay un blanco, porque ya tiene 6 caracteres. El
+monto a pagar comienza inmediatamente luego del ICD10 (es el valor 1234561, que
+se completa con un blanco a la derecha para completar los 8 caracteres de largo).
+3. La tercera línea se deja a modo de ejemplo, pues es similar a las demás.
+4. La cuarta línea incluye el caracter X adicional al final, lo que implica que el tratamiento
+está identificado como de alta complejidad. Nótese que esta es la única con una
+longitud de 40 caracteres, las demás líneas tienen una longitud de 39 caracteres, por
+lo que NO incluyen un espacio adicional a la derecha para igualar las longitudes.
+● Requerimiento:
+Se solicita desarrollar un programa en Python que gestione los datos de todos los
+tratamientos incluidos en el archivo de texto provisto. No cargar dato alguno por teclado:
+tomar TODAS las entradas desde el archivo.
+En forma similar a lo indicado en el TP1, para el cálculo de monto final a pagar se aplicarán las
+siguientes reglas:
+3
+
+a. El monto base no es el mismo para todos los tratamientos, sino que debe tomarse como
+base el monto que viene en el archivo en cada línea.
+b. Luego, si la letra del ICD10 está entre "A" y "L" (ambos incluidos), se agrega el monto
+especificado en la última línea leída desde el archivo para definición de adicionales para
+ese rango de letras.
+c. Si la letra está entre "M" y "Z" (ambos incluidos, pero sin contar la "U"), se agrega el
+monto especificado en la última línea leída desde el archivo para definición de
+adicionales para ese rango de letras.
+d. Pero si la letra es concretamente "U" (que representa códigos especiales en ICD10), se
+agrega el monto especificado en la última línea leída desde el archivo para definición de
+adicionales para esa letra específica.
+e. Y finalmente se agregará un porcentaje al monto obtenido de los pasos anteriores, que
+depende del número de enfermedad ubicado a la derecha del punto: el porcentaje a
+agregar, será igual a ese número.
+Por ejemplo:
+Código: "F05.9"
+Monto: (base + monto "AL") + 9% de la suma anterior = (25000 + 25000) + 9%
+= 50000 + (9% de 50000) = 54500
+● Salidas:
+Se pide desarrollar un programa que en base a todo lo anterior, procese los datos del archivo
+tratamientos.txt, usando un ciclo para levantar una por una las líneas del archivo (sin usar un
+arreglo ni ninguna otra estructura de datos auxiliar), y muestre finalmente los siguientes
+resultados (y estrictamente estos resultados):
+1. Resultado r1: La cantidad total de tratamientos leídos desde el archivo.
+2. Resultados r2, r3, r4, r5 y r6: La cantidad de órdenes leídas cuya letra descriptiva era
+A, B, C, E o P.
+3. Resultado r7: El importe final promedio (redondeado a dos decimales) pagado para
+todos los tratamientos del archivo que pertenecían al capítulo 19 del estándar ICD10.
+4. Resultados r8 y r9: Considerando solo los tratamientos que NO correspondan a la letra
+U, indicar el nombre del paciente (r8) que haya pagado el mayor importe final. Mostrar
+también ese mayor importe (r9) redondeado a 2 decimales.
+5. Resultado r10: El porcentaje entero que representaron los tratamientos identificados
+como de alta complejidad cuyo monto final superó el promedio pagado por TODOS
+los tratamientos, respecto del total de tratamientos identificados como de alta
+complejidad.
+6. El día que corresponda a la clase de laboratorio de la semana del cierre de este TP, se
+les indicará EN CLASES un ítem adicional, que deberán resolver y programar durante
+esa clase, modificando el programa que hayan comenzado a desarrollar en las
+semanas previas. Solo cuando hayan hecho esa modificación podrán subir el trabajo,
+siempre desde el Labsis. Y aclaramos: la resolución en forma aceptablemente correcta
+4
+
+de ese punto adicional es obligatoria para poder aprobar este trabajo. Entregar el
+programa sin resolverlo, o resolviéndolo en forma totalmente inaceptable (como para
+cumplir…) provocará el aplazo sin contemplaciones del trabajo.
+● Consideraciones especiales:
+En principio este trabajo será calificado en forma semiautomática: Tanto las entradas (que
+vendrán desde un archivo de texto) como las salidas, deben atenerse estrictamente a lo
+esperado. El archivo de texto de entrada debe ser leído asumiendo el orden correcto de datos
+que contiene, y también es totalmente exigible el orden de las salidas.
+No muestren nada más en ninguna otra parte del programa: Los únicos print() que el
+programa debe tener son los que están indicados en el enunciado para generar la secuencia
+de salidas pedidas. Y nada más que esos print() que se ven en la secuencia más abajo en esta
+misma página (manteniendo los dos puntos (“:”) al final de cada mensaje. No pongan títulos.
+No pongan mensajes de bienvenida. Ni saludos. Ni agradecimientos. No cambien caracteres
+en los mensajes de salida que indicamos más abajo. No agreguen líneas en blanco. No
+agreguen ningún print() de control. Nada. Limítense ESTRICTAMENTE a los print() que se
+indican más abajo.
+Mostramos ahora la secuencia de instrucciones print() que sus programas deberían tener al
+final (copien y peguen al final de su código fuente toda la secuencia de salidas que sigue), y
+respeten a rajatabla el orden de esas salidas, el formato, los mensajes y la cantidad de líneas
+que les estamos mostrando. En la secuencia de abajo, lo único que pueden cambiar son los
+nombres de las variables en los que se suponen almacenados los resultados (obviamente, con
+esos nombres cada programador decide):
+print('(r1) - Cantidad de tratamientos cargados:', r1)
+print('(r2) - Cantidad de tratamientos "A":', r2)
+print('(r3) - Cantidad de tratamientos "B":', r3)
+print('(r4) - Cantidad de tratamientos "C":', r4)
+print('(r5) - Cantidad de tratamientos "E":', r5)
+print('(r6) - Cantidad de tratamientos "P":', r6)
+print('(r7) – Importe final promedio (capítulo 19):', r7)
+print('(r8) – Paciente (no tipo "U") que pagó el mayor importe final:', r8)
+print('(r9) - Mayor importe pagado por ese paciente):', r9)
+print('(r10)- Porcentaje de tratamientos de alta complejidad con coste mayor al promedio:', r10)
+Ejemplo de salidas esperadas:
+(r1) - Cantidad de tratamientos cargados: 100
+(r2) - Cantidad de tratamientos "A": 20
+(r3) - Cantidad de tratamientos "B": 12
+(r4) - Cantidad de tratamientos "C": 5
+(r5) - Cantidad de tratamientos "E": 15
+(r6) - Cantidad de tratamientos "P": 3
+(r7) – Importe final promedio (capítulo 19): 55000.00
+(r8) – Paciente (no tipo "U") que pagó el mayor importe final: Gordon Freeman
+(r9) - Mayor importe pagado por ese paciente: 85790.73
+(r10)- Porcentaje de tratamientos de alta complejidad con coste mayor al promedio: 89
+Este ejemplo no guarda relación alguna con los datos reales que deberán procesar por lo que
+sus resultados serán diferentes. Solo se incluye el ejemplo para que puedan comparar EL
+FORMATO de las salidas de su programa con las esperadas, y puedan corregirlo en caso de no
+coincidir.
+5
+

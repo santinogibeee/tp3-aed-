@@ -1,0 +1,119 @@
+Algoritmos y Estructuras de Datos
+Ciclo 2026
+Trabajo Práctico 1 – Enunciado Base
+Implementación de un Sistema Simple de Gestión Tratamientos Médicos
+● Introducción:
+Se pedirá desarrollar un sistema simple que procese datos de tratamientos médicos llevados
+a cabo en un centro de salud. Este centro ha estandarizado la identificación de las
+enfermedades, problemas de salud y causas de muerte utilizando para ello el modelo ICD10
+(International Classification of Diseases, versión 10), que es publicado por la Organización
+Mundial de la Salud (World Health Organization - WHO) desde 1990 (se ha anunciado que
+desde 2022 entraría en vigencia la versión ICD11, pero a los efectos de este TP nos
+mantendremos en la versión ICD10).
+En la clasificación ICD10, cada problema de salud se identifica con un código alfanumérico de
+hasta 6 caracteres. Estos códigos se dividen en 22 capítulos, y estos se dividen a su vez en
+bloques, para permitir mayor amplitud en la descripción de enfermedades y temas de salud.
+El formato esencial de un código ICD10 se puede representar como "X##.##", en donde "X"
+es una letra que indica un grupo general de problemas médicos. Los "#" son siempre dígitos:
+los dos primeros (completando con un "0" el primero si es necesario) indican el bloque dentro
+de ese grupo de problemas. Luego sigue un punto (literalmente un punto), y luego uno o dos
+dígitos más para indicar el problema de salud o enfermedad específico apuntado por ese
+código.
+Por ejemplo, en un código ICD10 como "H70.1" la subcadena "H70" indica "Mastoiditis y
+afecciones relacionadas", mientras que el "1" a la derecha del punto indica específicamente
+"Mastoiditis crónica". La letra y los dos primeros dígitos llevan a un conjunto de descripciones
+de enfermedades y problemas similares, mientras que el número a la derecha del punto indica
+concretamente el problema o la enfermedad dentro de ese conjunto. La lista de códigos ICD10
+en español se puede consultar en el siguiente enlace (y sugerimos encarecidamente que la
+consulten):
+https://ais.paho.org/classifications/chapters/
+Los 22 capítulos en los que se divide el catálogo ICD10 internamente se identifican con
+números romanos y cada capítulo agrupa uno o más problemas y bloques. Por ejemplo, el
+capítulo I agrupa todos los códigos "A" y "B", y el capítulo IV abarca solo los códigos "E". Pero
+en algunos casos, dos capítulos diferentes pueden albergar códigos de la misma letra, como
+es el caso de los capítulos II y III: el capítulo II abarca todos los códigos "C" y los códigos entre
+"D00" y "D48", mientras que el capítulo III incluye desde "D50" hasta "D89". El código "D49"
+no existe (no está asignado aún), y los códigos "D" terminan en el "D89" (los siguientes aún
+no fueron asignados).
+● Entradas:
+Por cada tratamiento médico realizado en ese centro, se tienen los datos siguientes:
+1
+
+● Nombre del paciente: una cadena de caracteres (sin validación ni formato específico
+requerido) con el nombre y el apellido del paciente al cual se aplicó el tratamiento.
+● El código ICD10 que identifica la enfermedad (o sea, el diagnóstico): una cadena de
+caracteres en el formato indicado en la sección anterior.
+● El monto base a pagar por el tratamiento: Un número entero que indica la cantidad
+inicial o base que deberá pagarse al centro de salud por el tratamiento. En este TP
+asumiremos algunas reglas de cálculo adicionales para el monto final, no reales, pero
+adecuadas para el nivel de procesamiento esperado (se describen en la siguiente
+sección).
+● Requerimiento:
+Se solicita desarrollar un programa en Python que gestione los datos de UN único
+tratamiento. El programa debe solicitar que se carguen por teclado los tres datos indicados
+en la sección anterior, realizar el cálculo del monto a pagar y finalmente mostrar por pantalla
+los elementos del recibo que acredite el pago.
+Para el cálculo de monto a pagar se aplicarán las siguientes reglas:
+a. Monto fijo que se agrega al base para todos los tratamientos: 25000 pesos.
+b. Si la letra está entre "A" y "L" (ambos incluidos), se agregan 25000 pesos más.
+c. Si la letra está entre "M" y "Z" (ambos incluidos, pero sin contar la "U"), se agregan
+40000 pesos más.
+d. Pero si la letra es concretamente "U" (que representa códigos especiales en ICD10), se
+agregan 100000 pesos más.
+e. Y finalmente se agregará un porcentaje al monto obtenido de los pasos anteriores, que
+depende del número de enfermedad ubicado a la derecha del punto: el porcentaje a
+agregar, será igual a ese número.
+Por ejemplo:
+Asumir que se cargó base = 10000 y código: "F05.9"
+Final = (base + fijo + monto "AL") + 9% de la suma anterior = (10000 + 25000 + 25000) + 9%
+= 60000 + (9% de 60000)
+= 60000 + 5400 = 65400
+● Salidas:
+Los valores (resultados) a mostrar en pantalla son:
+1. El nombre paciente, tal como fue cargado y sin modificación alguna.
+2. El código ICD10 del diagnóstico, tal como fue cargado y sin modificación alguna.
+3. La cadena con la descripción (nombre) del capítulo ICD10 representado por la
+subcadena inicial, previa al punto, del código ICD10. Para resolver esto deberán
+consultar la página de códigos, tomar nota de cuáles son los nombres de cada capítulo.
+Tómenlo con calma pero estudien bien la tabla de códigos. Son 22 nombres de
+capítulos, y la relación entre el nombre y el código ICD10 fue explicada en la sección
+"Introducción".
+2
+
+4. El importe final pagado por el paciente, de acuerdo a las reglas de cálculo indicadas
+en la sección "Requerimiento".
+5. En la clase de laboratorio que corresponda a la semana del 20 al 24 der abril, se les
+indicará EN CLASES un ítem extra adicional para este enunciado, que deberán resolver
+y programar durante esa clase, modificando el programa que hayan comenzado a
+desarrollar en las semanas previas. Solo cuando hayan hecho esa modificación podrán
+subir el trabajo, pero deberán hacerlo desde el laboratorio, en presencia de sus
+profesores (se tomará lista en esa clase, y la entrega no valdrá para los alumnos que
+no estén presentes). Y aclaramos: la resolución en forma aceptablemente correcta de
+ese punto extra adicional es obligatoria para poder aprobar este trabajo. Entregar el
+programa sin resolverlo, o resolviéndolo en forma totalmente inaceptable (como para
+cumplir…) provocará el aplazo sin contemplaciones del trabajo.
+● Consideraciones especiales:
+La calificación de este trabajo será realizada por los profesores en forma semiautomática: un
+programa de control (designado como runner) ejecutará el TP presentado por cada grupo, y
+simplemente controlará que los resultados entregados sean correctos.
+Por este motivo, a los efectos de facilitar ese proceso de calificación, se solicita rigurosamente
+cumplir las siguientes dos consignas:
+1. No impriman títulos ni mensajes de bienvenida de ningún tipo. Al programar la carga
+de datos en el programa, sigan estrictamente el mismo orden de carga en que están
+enumerados más arriba, y no agreguen NINGÚN otro dato más que los que se piden
+aquí: primero carguen el nombre del destinatario, luego el código identificatorio de la
+orden de pago, y luego el monto a pagar, manteniendo los tipos de datos que se
+indicaron (NO carguen más datos que los que se han indicado).
+2. Al mostrar los resultados en pantalla, si las variables donde se almacenaron los
+resultados a mostrar fuesen beneficiario, código, capítulo y monto (pueden usar los
+nombres que consideren más adecuados… lo que sigue es solo un ejemplo), entonces
+usen estrictamente la secuencia de instrucciones que siguen para visualizar esas
+salidas (NO cambien los mensajes, NO saquen los ":" de cada mensaje, NO agreguen
+otros resultados parciales o finales, NO agreguen saltos de línea ni ningún tipo de texto
+o adorno a las salidas):
+print("Beneficiario:", beneficiario)
+print("Codigo:", codigo)
+print("Capitulo:", capitulo)
+print("Monto a pagar:", monto_final)
+3
+
